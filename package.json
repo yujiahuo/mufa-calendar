@@ -1,0 +1,21 @@
+{
+  "type": "module",
+  "name": "mufa-calendar",
+  "version": "1.0.0",
+  "description": "MUFA calendar of upcoming games",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Yujia Huo",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/local-auth": "^2.1.0",
+    "googleapis": "^105.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.2",
+    "google-auth-library": "catalog:",
+    "typescript": "catalog:"
+  }
+}
