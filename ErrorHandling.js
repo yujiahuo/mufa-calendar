@@ -1,3 +1,13 @@
+/*
+Error {
+  teamId: string,
+  divisionId: string,
+  teamName: string,
+  message: string,
+}
+
+*/
+
 function validateGameEvents(gameEvents, errors) {
   for (const event of gameEvents) {
     if (!event.title) {
@@ -18,12 +28,25 @@ function validateGameEvents(gameEvents, errors) {
   }
 }
 
-function notifyOfSuccess() {
-  //MailApp.sendEmail(MY_EMAIL, "MUFA calendar ran successfully", "Yay good job");
+function addError(teamId, divisionId, teamName, message, errors) {
+  console.log(`Added error: ${teamId} - ${message}`);
+
+  const error = {
+    teamId: teamId,
+    divisionId: divisionId,
+    teamName: teamName,
+    message: message,
+  };
+  errors.add(error);
 }
 
-function notifyOfResultsWithErrors(resultsDictionary, teamsByDivision) {
-  let message = "Well something went wrong. Here's what:\n\n";
+function notifyOfUpdateSuccessful() {
+  //MailApp.sendEmail(MY_EMAIL, "MUFA calendar update ran successfully", "Yay good job");
+}
+
+function notifyOfUpdateWithErrors(resultsDictionary, teamsByDivision) {
+  let message =
+    "Well something went wrong with the update script. Here's what:\n\n";
 
   message = message.concat(
     `Target teams: ${JSON.stringify(teamsByDivision)}\n\n`
@@ -41,5 +64,10 @@ function notifyOfResultsWithErrors(resultsDictionary, teamsByDivision) {
   }
 
   console.log(message);
-  //MailApp.sendEmail(MY_EMAIL, "MUFA calendar ran with errors", message);
+  //MailApp.sendEmail(MY_EMAIL, "MUFA calendar update ran with errors", message);
+}
+
+function notifyOfCreateWithErrors() {
+  console.log("Calendar creation didn't finish");
+  //MailApp.sendEmail(MY_EMAIL, "MUFA calendar creation ran with errors", "Retrying again in an hour");
 }

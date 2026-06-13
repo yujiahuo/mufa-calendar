@@ -29,6 +29,10 @@ function createCalendars() {
       }
     }
   }
+
+  if (errors) {
+    createOneTimeTrigger("createCalendars");
+  }
 }
 
 // Calendar has a limit on how often you can create calendars and events

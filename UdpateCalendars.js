@@ -41,9 +41,9 @@ async function updateCalendars() {
   console.log(`Elapsed time: ${elapsedMinutes} mins`);
 
   if (hasError) {
-    notifyOfResultsWithErrors(resultsByTeamAndDivision, teamsByDivision);
+    notifyOfUpdateWithErrors(resultsByTeamAndDivision, teamsByDivision);
   } else {
-    notifyOfSuccess();
+    notifyOfUpdateSuccessful();
   }
 }
 
@@ -107,7 +107,6 @@ function updateEventWithRetry(calendar, eventData) {
       Utilities.sleep(waitTime);
     }
   }
-  createOneTimeTrigger();
 }
 
 function updateExistingEvent(newEvent, existingEvents) {
