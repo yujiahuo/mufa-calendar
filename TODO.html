@@ -1,0 +1,37 @@
+<!---------------------------------------------------------------------------------------
+
+TODO list
+---------------
+
+
+Immediate stuff
+- Reactivate 15 minute retry trigger
+- FIGURE OUT HOW TO IDENTIFY CANCELLATIONS
+  - Can a script reliably detect this and trigger the update script?
+  - Can I manually trigger the script from my phone when I know about it?
+- End the script if we run into the too many calendars/events error
+- Run on hella teams in a more organized way
+  - Move the teamIDs to live somewhere better like in a spreadsheet so we can filter and update by date/league/team/whatever
+  - Retries should only happen for failed teams
+  - Batch and/or stagger league/team updates so we run into calendar/event limits less often 
+- Fun emojis yay
+- Version this and make it workable in a less shitty IDE
+- Include other teams besides t/tr. Programmatically pull team/division list from the site?
+- Can I get a lots somewhere other than email?
+- Better logs
+  - What was updated or at least how many updates were made counting toward the limits
+- Find a good way to share all the calendars once this script is stable
+- Less janky error handling.
+  - Distinction for errors we can proceed with and ones that should stop the script
+  - Better error functions
+
+Possible enhancements
+- Update past games with the final score
+- Have the script also make the attendance sheet for the team and add a link to the description
+- Have a separate calendar creation script that runs on a different schedule?
+
+Stupid shit
+- When creating calendars, choose color based off jersey color if available or based on team name
+
+
+---------------------------------------------------------------------------------------->

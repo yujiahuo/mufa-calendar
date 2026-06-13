@@ -10,12 +10,9 @@
   "author": "Yujia Huo",
   "license": "ISC",
   "dependencies": {
-    "@google-cloud/local-auth": "^2.1.0",
     "googleapis": "^105.0.0"
   },
   "devDependencies": {
-    "@types/node": "^25.9.2",
-    "google-auth-library": "catalog:",
-    "typescript": "catalog:"
+    "@types/google-apps-script": "^2.0.11"
   }
 }
