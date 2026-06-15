@@ -1,14 +1,15 @@
 function getCalendarName(teamName) {
+  if (!teamName) return "";
   return `${teamName} - MUFA 2026 summer`;
 }
 
 function getTitle(opponent) {
-  if (!opponent) return null;
+  if (!opponent) return "";
   return "MUFA game vs. " + opponent;
 }
 
 function getStartTime(timeString) {
-  if (!timeString) return null;
+  if (!timeString) return "";
   return new Date(timeString);
 }
 
@@ -18,7 +19,7 @@ function getEndTime(startTime) {
 }
 
 function getAddressFromParkName(field) {
-  if (!(field?.length > 0)) return;
+  if (!(field?.length > 0)) return "";
 
   const match = field.match(/(.*)\s.$/); // Gields at a park are indicated by a single number or letter
   const cleanName = match[1] ?? field;

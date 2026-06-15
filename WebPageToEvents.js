@@ -1,5 +1,9 @@
 // Takes html content and returns a list of Calendar events with data pulled from the page
-function getEventsFromPageViaTable(myTeamOut, errors) {
+function getEventsFromPageViaTable(
+  teamId,
+  divisionId,
+  resultsByTeamAndDivision
+) {
   var response = UrlFetchApp.fetch(
     "https://mufa.org/League/Division/Team.aspx?t=" +
       teamId +
@@ -9,15 +13,19 @@ function getEventsFromPageViaTable(myTeamOut, errors) {
   var htmlContent = response.getContentText();
 
   if (!htmlContent) {
-    errors.add("No html found");
-    return [];
+    resultsByTeamAndDivision.addError(teamId, divisionId, "No html found");
+    return [null, null];
   }
 
-  myTeamOut = getTeamNameFromPage(htmlContent);
+  var myTeamName = getTeamNameFromPage(htmlContent);
 
-  if (!myTeamOut) {
-    errors.add("Unable to get team name");
-    return [];
+  if (!myTeamName) {
+    resultsByTeamAndDivision.addError(
+      teamId,
+      divisionId,
+      "Unable to get team name"
+    );
+    return [null, null];
   }
 
   const events = [];
@@ -26,16 +34,24 @@ function getEventsFromPageViaTable(myTeamOut, errors) {
   const tableMatch = htmlContent.match(TABLE_REGEX);
 
   if (!(tableMatch?.length > 1)) {
-    errors.add("No table of games found");
-    return [];
+    resultsByTeamAndDivision.addError(
+      teamId,
+      divisionId,
+      "No table of games found"
+    );
+    return [null, null];
   }
 
   // Get all the rows, each row representing one game
   const rowMatchList = Array.from(tableMatch[1].matchAll(ROW_REGEX));
 
   if (!(rowMatchList?.length > 0)) {
-    errors.add("No rows found in table");
-    return [];
+    resultsByTeamAndDivision.addError(
+      teamId,
+      divisionId,
+      "No rows found in table"
+    );
+    return [null, null];
   }
 
   // Get events from each row
@@ -44,21 +60,45 @@ function getEventsFromPageViaTable(myTeamOut, errors) {
       const rowHtml = rowMatch[1];
 
       const startTimeString = getCellContent(rowHtml, 3);
-      if (!startTimeString) errors.add("Unable to extract start time");
+      if (!startTimeString)
+        resultsByTeamAndDivision.addError(
+          teamId,
+          divisionId,
+          "Unable to extract start time"
+        );
       const startTime = getStartTime(startTimeString);
 
       const opponentWithWinHistory = getCellContent(rowHtml, -3);
       if (!opponentWithWinHistory)
-        errors.add("Unable to extract opponent info");
+        resultsByTeamAndDivision.addError(
+          teamId,
+          divisionId,
+          "Unable to extract opponent info"
+        );
 
       const fieldString = getCellContent(rowHtml, 5);
-      if (!fieldString) errors.add("Unable to extract field info");
+      if (!fieldString)
+        resultsByTeamAndDivision.addError(
+          teamId,
+          divisionId,
+          "Unable to extract field info"
+        );
       const field = fieldString.replace("(Map)(Diagram)", "").trim();
 
       const ourJersey = getCellContent(rowHtml, 4);
-      if (!ourJersey) errors.add("Unable to extract my team jersey");
+      if (!ourJersey)
+        resultsByTeamAndDivision.addError(
+          teamId,
+          divisionId,
+          "Unable to extract my team jersey"
+        );
       const theirJersey = getCellContent(rowHtml, -1);
-      if (!theirJersey) errors.add("Unable to extract opponent team jersey");
+      if (!theirJersey)
+        resultsByTeamAndDivision.addError(
+          teamId,
+          divisionId,
+          "Unable to extract opponent team jersey"
+        );
 
       const diagramAnchor = getDiagramAnchor(rowHtml);
 
@@ -77,11 +117,7 @@ function getEventsFromPageViaTable(myTeamOut, errors) {
     }
   }
 
-  validateGameEvents(events, errors);
-  if (errors?.length > 0) {
-    return [];
-  }
-  return events;
+  return [myTeamName, events];
 }
 
 function getCellContent(tableHtml, colIndex) {
@@ -124,5 +160,5 @@ function getTeamName(teamId, divisionId) {
       divisionId
   );
   var htmlContent = response.getContentText();
-  return getTeamNameFromPage(htmlContent);
+  return getTeamNameFromPage(htmlContent)?.trim();
 }
