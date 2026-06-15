@@ -53,13 +53,19 @@ function getDescription(ourJersey, theirJersey, field, diagramAnchor) {
     minute: "2-digit",
   });
 
-  let description = `
-    Field: ${field} (${diagramAnchor})
-    Our color: ${ourJersey}
-    Their color: ${theirJersey}
+  let description = "";
 
-    (Last updated ${lastUpdated})
-  `;
+  if (field) {
+    const diagram = diagramAnchor ?? "no diagram";
+    description = description + "\n" + `Field: ${field} (${diagram})`;
+  }
+  if (ourJersey) {
+    description = description + "\n" + `Our color: ${ourJersey}`;
+  }
+  if (theirJersey) {
+    description = description + "\n" + `Their color: ${theirJersey}`;
+  }
 
+  description = description + "\n" + `(Last updated ${lastUpdated})`;
   return description;
 }

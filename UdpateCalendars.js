@@ -191,7 +191,7 @@ function updateExistingEvent(
 ) {
   if (existingEvents.length === 1) {
     const event = existingEvents[0];
-    const madeChanges = false;
+    let madeChanges = false;
     if (event.getTitle() !== newEvent.title) {
       event.setTitle(newEvent.title);
       resultsByTeamAndDivision.addLog(
@@ -257,4 +257,11 @@ function createNewEvent(
     divisionId,
     "Created new event for team"
   );
+}
+
+function hasIncompleteTeams(teamsByDivision) {
+  for (item of teamsByDivisionIterator(teamsByDivision)) {
+    if (item.value) return true;
+  }
+  return false;
 }

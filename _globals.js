@@ -109,7 +109,6 @@ const TEAMS_BY_DIVISION = {
 // Error handling
 const MAX_RUNTIME_MS = 5 * 60 * 1000; // App scripts have a max runtime of 6 min. Stop at 5.
 let CREATED_ONE_TIME_TRIGGER = false;
-const errorsGlob = {}; // Dictionary of teamId: errorObj
 
 // Site scraping
 const TABLE_REGEX =
@@ -121,4 +120,4 @@ const TEAM_NAME_REGEX = /id="cpMain_cpMain_lblTeamName">([\s\S]*?)<\//;
 
 // Config
 const MY_EMAIL = "mufagamescalendar@gmail.com";
-const debugMode = false;
+let debugMode = false;

@@ -58,7 +58,10 @@ function getEventsFromPageViaTable(
   for (const rowMatch of rowMatchList) {
     if (rowMatch.length > 1) {
       const rowHtml = rowMatch[1];
+      let isBye = false;
+      let isCancelled = false;
 
+      // Time
       const startTimeString = getCellContent(rowHtml, 3);
       if (!startTimeString)
         resultsByTeamAndDivision.addError(
@@ -68,6 +71,7 @@ function getEventsFromPageViaTable(
         );
       const startTime = getStartTime(startTimeString);
 
+      // Opponent
       const opponentWithWinHistory = getCellContent(rowHtml, -3);
       if (!opponentWithWinHistory)
         resultsByTeamAndDivision.addError(
@@ -76,6 +80,7 @@ function getEventsFromPageViaTable(
           "Unable to extract opponent info"
         );
 
+      // Field
       const fieldString = getCellContent(rowHtml, 5);
       if (!fieldString) {
         resultsByTeamAndDivision.addError(
@@ -84,15 +89,15 @@ function getEventsFromPageViaTable(
           "Unable to extract field info"
         );
       } else if (fieldString.includes("BYE/")) {
-        resultsByTeamAndDivision.addLog(
-          teamId,
-          divisionId,
-          "Skipping event with a bye"
-        );
-        continue;
+        isBye = true;
       }
       const field = fieldString.replace("(Map)(Diagram)", "").trim();
 
+      // Check for cancellation
+      const gameResultString = getCellContent(rowHtml, 6);
+      if (gameResultString === "CO") isCancelled = true;
+
+      // Our jersey color
       const ourJersey = getCellContent(rowHtml, 4);
       if (!ourJersey)
         resultsByTeamAndDivision.addError(
@@ -100,6 +105,8 @@ function getEventsFromPageViaTable(
           divisionId,
           "Unable to extract my team jersey"
         );
+
+      // Their jersey color
       const theirJersey = getCellContent(rowHtml, -1);
       if (!theirJersey)
         resultsByTeamAndDivision.addError(
@@ -108,20 +115,38 @@ function getEventsFromPageViaTable(
           "Unable to extract opponent team jersey"
         );
 
+      // Diagram link
       const diagramAnchor = getDiagramAnchor(rowHtml);
 
-      events.push({
-        title: getTitle(opponentWithWinHistory),
-        startTime: startTime,
-        endTime: getEndTime(startTime),
-        location: getAddressFromParkName(field),
-        description: getDescription(
-          ourJersey,
-          theirJersey,
-          field,
-          diagramAnchor
-        ),
-      });
+      // Create event
+      if (isBye) {
+        events.push({
+          title: "NO GAME (bye)",
+          startTime: startTime,
+          endTime: getEndTime(startTime),
+          description: getDescription(),
+        });
+      } else if (isCancelled) {
+        events.push({
+          title: "GAME CANCELLED",
+          startTime: startTime,
+          endTime: getEndTime(startTime),
+          description: getDescription(),
+        });
+      } else {
+        events.push({
+          title: getTitle(opponentWithWinHistory),
+          startTime: startTime,
+          endTime: getEndTime(startTime),
+          location: getAddressFromParkName(field),
+          description: getDescription(
+            ourJersey,
+            theirJersey,
+            field,
+            diagramAnchor
+          ),
+        });
+      }
     }
   }
 
