@@ -1,8 +1,8 @@
-async function updateAllCalendars() {
+function updateAllCalendars() {
   updateCalendars(TEAMS_BY_DIVISION);
 }
 
-async function continueUpdateCalendars(e) {
+function continueUpdateCalendars(e) {
   const triggerUid = e.triggerUid; // Extract the firing trigger's ID
   const props = PropertiesService.getScriptProperties();
   const savedTeams = props.getProperty(triggerUid);
@@ -11,14 +11,14 @@ async function continueUpdateCalendars(e) {
     const teamsByDivision = JSON.parse(savedTeams);
     updateCalendars(teamsByDivision);
 
-    // Clean up properties after use
+    // Clean up
     props.deleteProperty(triggerUid);
+    deleteTriggerById(triggerUid);
   }
 }
 
-async function updateCalendars(teamsByDivision) {
+function updateCalendars(teamsByDivision) {
   const scriptStartTime = new Date().getTime(); // Make sure we don't exceed script run time limit
-  const remainingTeams = JSON.parse(JSON.stringify(teamsByDivision));
   let elapsedTime;
   const resultsByTeamAndDivision = new ResultsByTeamAndDivision();
 
@@ -37,17 +37,20 @@ async function updateCalendars(teamsByDivision) {
           divisionId,
           "Reached max runtime - creating new trigger"
         );
-        createOneTimeTrigger("updateCalendars", remainingTeams, 0);
+        createOneTimeTrigger("continueUpdateCalendars", teamsByDivision, 1);
         break;
       }
       updateCalendarEventsForTeam(teamId, divisionId, resultsByTeamAndDivision);
-      remainingTeams[divisionId][teamId] = false;
+      if (resultsByTeamAndDivision.hasFatalErrors) {
+        break;
+      }
+      teamsByDivision[divisionId][teamId] = false;
       console.log(`Calendar processed: ${divisionId}-${teamId}`);
     } catch (e) {
       resultsByTeamAndDivision.addError(
         teamId,
         divisionId,
-        "Hit catch block with error: " + e
+        `Hit catch block with error: ${e.message}. Stack: ${e.stack}`
       );
     }
 
@@ -55,6 +58,10 @@ async function updateCalendars(teamsByDivision) {
   }
 
   notifyOfResults(resultsByTeamAndDivision);
+  if (hasIncompleteTeams(teamsByDivision)) {
+    // We made it through the whole list but had errors. Wait longer before trying again
+    createOneTimeTrigger("continueUpdateCalendars", teamsByDivision, 180);
+  }
 }
 
 function updateCalendarEventsForTeam(

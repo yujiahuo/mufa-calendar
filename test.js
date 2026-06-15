@@ -1,10 +1,22 @@
+const TEST_TEAMS = {
+  555: {
+    6450: true,
+  },
+};
+
 function test() {
-  console.log(TEAMS_BY_DIVISION);
-  delete TEAMS_BY_DIVISION[554][6371];
-  const stringified = JSON.stringify(TEAMS_BY_DIVISION);
-  console.log(`stringified: ${stringified}`);
-  const unstringified = JSON.parse(stringified);
-  console.log(`unstringified: ${unstringified}`);
-  console.log(unstringified[554][6372]);
-  console.log(unstringified[554][6371]);
+  const results = new ResultsByTeamAndDivision();
+  results.hasErrors = true;
+  results.results = [
+    new Result(1, 2, "log", "mmm"),
+    new Result(2, 2, "log", "qqqq"),
+    new Result(3, 2, "error", "fwefwef"),
+    new Result(4, 2, "log", "wwww"),
+    new Result(5, 2, "error", "aaaaa"),
+    new Result(6, 3, "log", "aaaa"),
+    new Result(7, 2, "log", "fff"),
+    new Result(8, 2, "log", "fwef"),
+  ];
+
+  console.log(getEmailBodyFromResults(results));
 }

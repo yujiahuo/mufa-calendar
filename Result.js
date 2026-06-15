@@ -9,7 +9,9 @@ class Result {
 
 class ResultsByTeamAndDivision {
   constructor() {
-    (this.hasErrors = false), (this.results = []);
+    (this.hasErrors = false),
+      (this.hasFatalErrors = false),
+      (this.results = []);
   }
 
   addLog(teamId, divisionId, message) {
@@ -23,5 +25,13 @@ class ResultsByTeamAndDivision {
     const result = new Result(teamId, divisionId, "error", message);
     this.results.push(result);
     this.hasErrors = true;
+  }
+
+  addFatalError(teamId, divisionId, message) {
+    console.log(`Added fatal error: ${divisionId}-${teamId} - ${message}`);
+    const result = new Result(teamId, divisionId, "error", message);
+    this.results.push(result);
+    this.hasErrors = true;
+    this.hasFatalErrors = true;
   }
 }

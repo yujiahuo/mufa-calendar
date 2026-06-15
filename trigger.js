@@ -1,10 +1,10 @@
 // Called whenever we run into google's limit on calendar/event creation
-function createOneTimeTrigger(functionName, teamsByDivision, delayInMinutes) {
+function createOneTimeTrigger(functionName, params, delayInMinutes) {
   if (CREATED_ONE_TIME_TRIGGER) return; // Protection against creating multiple triggers in one session
   CREATED_ONE_TIME_TRIGGER = true;
 
   // Get the current time and add the delay
-  var timeToRun = new Date();
+  let timeToRun = new Date();
   timeToRun.setTime(timeToRun.getTime() + +delayInMinutes * 60 * 1000);
 
   // Create the trigger for your target function
@@ -18,6 +18,18 @@ function createOneTimeTrigger(functionName, teamsByDivision, delayInMinutes) {
   // Set the remaining teams to process
   PropertiesService.getScriptProperties().setProperty(
     triggerUid,
-    JSON.stringify(teamsByDivision)
+    JSON.stringify(params)
   );
+}
+
+function deleteTriggerById(id) {
+  const allTriggers = ScriptApp.getProjectTriggers();
+
+  // Loop through all project triggers to find the matching ID
+  for (let i = 0; i < allTriggers.length; i++) {
+    if (allTriggers[i].getUniqueId() === id) {
+      ScriptApp.deleteTrigger(allTriggers[i]);
+      break;
+    }
+  }
 }

@@ -3,21 +3,23 @@ function getEmailBodyFromResults(resultsByTeamAndDivision) {
 
   // Create hash table by teamId
   const resultsHash = {};
-  for (const result in resultsByTeamAndDivision.results) {
-    if (!teamId) continue;
+  for (const result of resultsByTeamAndDivision.results) {
+    if (!result.teamId) continue;
     resultsHash[result.teamId] = resultsHash[result.teamId] ?? [];
     resultsHash[result.teamId].push(result);
   }
 
   // Go through hash and make email body
-  for (const [teamId, resultList] of Object.entries(teamsByDivision)) {
+  for (const [teamId, resultList] of Object.entries(resultsHash)) {
     body = body + `Results for team ${teamId}:\n`;
-    for (const result in resultList) {
-      const line = results.type === "error" ? "- Error: " : "- ";
+    for (const result of resultList) {
+      let line = result.type === "error" ? "- Error: " : "- ";
       line = line + result.message;
       body = body + `${line}\n`;
     }
   }
+
+  return body;
 }
 
 function notifyOfResults(resultsByTeamAndDivision) {

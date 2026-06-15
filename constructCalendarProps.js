@@ -21,7 +21,9 @@ function getEndTime(startTime) {
 function getAddressFromParkName(field) {
   if (!(field?.length > 0)) return "";
 
-  const match = field.match(/(.*)\s.$/); // Gields at a park are indicated by a single number or letter
+  const match = field.match(/(.*)\s.$/); // Fields at a park are indicated by a single number or letter
+  if (!match || match.length < 2) return field;
+
   const cleanName = match[1] ?? field;
 
   switch (cleanName) {

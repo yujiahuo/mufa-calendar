@@ -4,20 +4,20 @@ function getEventsFromPageViaTable(
   divisionId,
   resultsByTeamAndDivision
 ) {
-  var response = UrlFetchApp.fetch(
+  let response = UrlFetchApp.fetch(
     "https://mufa.org/League/Division/Team.aspx?t=" +
       teamId +
       "&d=" +
       divisionId
   );
-  var htmlContent = response.getContentText();
+  let htmlContent = response.getContentText();
 
   if (!htmlContent) {
     resultsByTeamAndDivision.addError(teamId, divisionId, "No html found");
     return [null, null];
   }
 
-  var myTeamName = getTeamNameFromPage(htmlContent);
+  let myTeamName = getTeamNameFromPage(htmlContent);
 
   if (!myTeamName) {
     resultsByTeamAndDivision.addError(
@@ -77,12 +77,20 @@ function getEventsFromPageViaTable(
         );
 
       const fieldString = getCellContent(rowHtml, 5);
-      if (!fieldString)
+      if (!fieldString) {
         resultsByTeamAndDivision.addError(
           teamId,
           divisionId,
           "Unable to extract field info"
         );
+      } else if (fieldString.includes("BYE/")) {
+        resultsByTeamAndDivision.addLog(
+          teamId,
+          divisionId,
+          "Skipping event with a bye"
+        );
+        continue;
+      }
       const field = fieldString.replace("(Map)(Diagram)", "").trim();
 
       const ourJersey = getCellContent(rowHtml, 4);
@@ -153,12 +161,12 @@ function getTeamNameFromPage(htmlContent) {
 }
 
 function getTeamName(teamId, divisionId) {
-  var response = UrlFetchApp.fetch(
+  let response = UrlFetchApp.fetch(
     "https://mufa.org/League/Division/Team.aspx?t=" +
       teamId +
       "&d=" +
       divisionId
   );
-  var htmlContent = response.getContentText();
+  let htmlContent = response.getContentText();
   return getTeamNameFromPage(htmlContent)?.trim();
 }
