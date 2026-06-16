@@ -29,7 +29,7 @@ function addRows(spreadsheet, calendarInfo) {
   const sheet = spreadsheet.getSheets()[0];
 
   for (let i = 0; i < calendarInfo.length; i++) {
-    const cellContent = getCellContent(
+    const cellLink = getCellRichTextLink(
       calendarInfo[i]?.name,
       calendarInfo[i]?.url
     );
@@ -38,7 +38,7 @@ function addRows(spreadsheet, calendarInfo) {
   }
 }
 
-function getCellContent(name, url) {
+function getCellRichTextLink(name, url) {
   return SpreadsheetApp.newRichTextValue()
     .setText(name)
     .setLinkUrl(url)

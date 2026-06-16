@@ -120,6 +120,7 @@ function getEventsFromPageViaTable(
 
       // Create event
       if (isBye) {
+        console.log(`Bye for ${divisionId} - ${teamId}`);
         events.push({
           title: "NO GAME (bye)",
           startTime: startTime,
@@ -127,6 +128,7 @@ function getEventsFromPageViaTable(
           description: getDescription(),
         });
       } else if (isCancelled) {
+        console.log(`Cancellation for ${divisionId} - ${teamId}`);
         events.push({
           title: "GAME CANCELLED",
           startTime: startTime,
