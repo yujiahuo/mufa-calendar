@@ -44,15 +44,15 @@ function getAddressFromParkName(field) {
   }
 }
 
-function getDescription(ourJersey, theirJersey, field, diagramAnchor) {
-  let now = new Date();
-  let lastUpdated = now.toLocaleString("en-US", {
-    month: "numeric",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+function getStringDescription(message) {
+  const lastUpdated = getLastUpdatedDateString();
+  let description = message;
+  description = description + "\n" + `(Last updated ${lastUpdated})`;
+  return description;
+}
 
+function getDescription(ourJersey, theirJersey, field, diagramAnchor) {
+  const lastUpdated = getLastUpdatedDateString();
   let description = "";
 
   if (field) {
@@ -68,4 +68,16 @@ function getDescription(ourJersey, theirJersey, field, diagramAnchor) {
 
   description = description + "\n" + `(Last updated ${lastUpdated})`;
   return description;
+}
+
+function getLastUpdatedDateString() {
+  const now = new Date();
+  const lastUpdated = now.toLocaleString("en-US", {
+    month: "numeric",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  return lastUpdated;
 }

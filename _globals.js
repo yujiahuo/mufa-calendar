@@ -121,3 +121,4 @@ const TEAM_NAME_REGEX = /id="cpMain_cpMain_lblTeamName">([\s\S]*?)<\//;
 // Config
 const MY_EMAIL = "mufagamescalendar@gmail.com";
 let debugMode = false;
+let excludePastEvents = true;

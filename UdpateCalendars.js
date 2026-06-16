@@ -95,7 +95,7 @@ function updateCalendarEventsForTeam(
     gameEvents?.forEach(function (eventData) {
       let now = new Date();
 
-      if (eventData.startTime < now) {
+      if (excludePastEvents && eventData.startTime < now) {
         return; // Don't touch past events
       }
 
