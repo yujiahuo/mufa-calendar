@@ -125,9 +125,7 @@ function getEventsFromPageViaTable(
           title: "NO GAME (bye)",
           startTime: startTime,
           endTime: getEndTime(startTime),
-          description: getStringDescription(
-            "It might sound crazy but it ain't no lie, you have a bye, bye, bye."
-          ),
+          description: getStringDescription(getRandomByeMessage()),
         });
       } else if (isCancelled) {
         console.log(`Cancellation for ${divisionId} - ${teamId}`);
@@ -135,9 +133,7 @@ function getEventsFromPageViaTable(
           title: "GAME CANCELLED",
           startTime: startTime,
           endTime: getEndTime(startTime),
-          description: getStringDescription(
-            "No fun today, sorry. You can still go to the Dane though."
-          ),
+          description: getStringDescription(getRandomCancellationMessage()),
         });
       } else {
         events.push({

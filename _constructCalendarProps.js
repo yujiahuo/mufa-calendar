@@ -44,10 +44,28 @@ function getAddressFromParkName(field) {
   }
 }
 
+function getRandomByeMessage() {
+  const messages = [
+    "It might sound crazy but it ain't no lie, you have a bye, bye, bye.",
+  ];
+  return messages[Math.floor(Math.random() * messages.length)];
+}
+
+function getRandomCancellationMessage() {
+  const messages = [
+    "Aw, sorry, no fun for you today. You can stare longingly out the window or maybe go to the Dane with your friends.",
+    "If you were unsatisfied with today's weather, you may file a formal complaint by shaking your fist and yelling at a cloud.",
+    "The fields are feeling vulnerable today and need some personal time off.",
+    "Just think of this as the day you would have been injured, but due to a miraculous cancellation, you'll be ok.",
+    "At least you won't be dropping any pulls today.",
+  ];
+  return messages[Math.floor(Math.random() * messages.length)];
+}
+
 function getStringDescription(message) {
   const lastUpdated = getLastUpdatedDateString();
   let description = message;
-  description = description + "\n" + `(Last updated ${lastUpdated})`;
+  description = description + "\n\n" + `(Last updated ${lastUpdated})`;
   return description;
 }
 
@@ -66,7 +84,7 @@ function getDescription(ourJersey, theirJersey, field, diagramAnchor) {
     description = description + "\n" + `Their color: ${theirJersey}`;
   }
 
-  description = description + "\n" + `(Last updated ${lastUpdated})`;
+  description = description + "\n\n" + `(Last updated ${lastUpdated})`;
   return description;
 }
 
