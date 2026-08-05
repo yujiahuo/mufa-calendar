@@ -2,13 +2,13 @@
 function getEventsFromPageViaTable(
   teamId,
   divisionId,
-  resultsByTeamAndDivision
+  resultsByTeamAndDivision,
 ) {
   let response = UrlFetchApp.fetch(
     "https://mufa.org/League/Division/Team.aspx?t=" +
       teamId +
       "&d=" +
-      divisionId
+      divisionId,
   );
   let htmlContent = response.getContentText();
 
@@ -23,7 +23,7 @@ function getEventsFromPageViaTable(
     resultsByTeamAndDivision.addError(
       teamId,
       divisionId,
-      "Unable to get team name"
+      "Unable to get team name",
     );
     return [null, null];
   }
@@ -31,25 +31,29 @@ function getEventsFromPageViaTable(
   const events = [];
 
   // Get the table of games
-  const tableMatch = htmlContent.match(TABLE_REGEX);
+  const tableMatchList = Array.from(htmlContent.matchAll(TABLE_REGEX));
 
-  if (!(tableMatch?.length > 1)) {
+  if (!(tableMatchList?.length > 1)) {
     resultsByTeamAndDivision.addError(
       teamId,
       divisionId,
-      "No table of games found"
+      "No table of games found",
     );
     return [null, null];
   }
 
   // Get all the rows, each row representing one game
-  const rowMatchList = Array.from(tableMatch[1].matchAll(ROW_REGEX));
+  const rowMatchList = [];
+
+  for (const tableMatch of tableMatchList) {
+    rowMatchList.push(...(Array.from(tableMatch[1].matchAll(ROW_REGEX)) ?? []));
+  }
 
   if (!(rowMatchList?.length > 0)) {
     resultsByTeamAndDivision.addError(
       teamId,
       divisionId,
-      "No rows found in table"
+      "No rows found in table",
     );
     return [null, null];
   }
@@ -67,7 +71,7 @@ function getEventsFromPageViaTable(
         resultsByTeamAndDivision.addError(
           teamId,
           divisionId,
-          "Unable to extract start time"
+          "Unable to extract start time",
         );
       const startTime = getStartTime(startTimeString);
 
@@ -77,7 +81,7 @@ function getEventsFromPageViaTable(
         resultsByTeamAndDivision.addError(
           teamId,
           divisionId,
-          "Unable to extract opponent info"
+          "Unable to extract opponent info",
         );
 
       // Field
@@ -86,7 +90,7 @@ function getEventsFromPageViaTable(
         resultsByTeamAndDivision.addError(
           teamId,
           divisionId,
-          "Unable to extract field info"
+          "Unable to extract field info",
         );
       } else if (fieldString.includes("BYE/")) {
         isBye = true;
@@ -103,7 +107,7 @@ function getEventsFromPageViaTable(
         resultsByTeamAndDivision.addError(
           teamId,
           divisionId,
-          "Unable to extract my team jersey"
+          "Unable to extract my team jersey",
         );
 
       // Their jersey color
@@ -112,7 +116,7 @@ function getEventsFromPageViaTable(
         resultsByTeamAndDivision.addError(
           teamId,
           divisionId,
-          "Unable to extract opponent team jersey"
+          "Unable to extract opponent team jersey",
         );
 
       // Diagram link
@@ -145,7 +149,7 @@ function getEventsFromPageViaTable(
             ourJersey,
             theirJersey,
             field,
-            diagramAnchor
+            diagramAnchor,
           ),
         });
       }
@@ -192,7 +196,7 @@ function getTeamName(teamId, divisionId) {
     "https://mufa.org/League/Division/Team.aspx?t=" +
       teamId +
       "&d=" +
-      divisionId
+      divisionId,
   );
   let htmlContent = response.getContentText();
   return getTeamNameFromPage(htmlContent)?.trim();

@@ -112,8 +112,8 @@ let CREATED_ONE_TIME_TRIGGER = false;
 
 // Site scraping
 const TABLE_REGEX =
-  /<table class="rgMasterTable"[\s\S]*?<tbody>([\s\S]*?)<\/tbody>/;
-const ROW_REGEX = /<tr[\S\s]*?>([\s\S]*?)<\/tr>/g; // TODO: use [^>]* here
+  /<table class="rgMasterTable"[\s\S]*?<tbody>([\s\S]*?)<\/tbody>/g;
+const ROW_REGEX = /<tr[^>]*>([\s\S]*?)<\/tr>/g;
 const CELL_REGEX = /<td[^>]*>([\s\S]*?)<\/td>/g;
 const DIAGRAM_ANCHOR_REGEX = /<a [^>]*>Diagram<\/a>/;
 const TEAM_NAME_REGEX = /id="cpMain_cpMain_lblTeamName">([\s\S]*?)<\//;
