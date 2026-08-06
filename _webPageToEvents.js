@@ -33,7 +33,7 @@ function getEventsFromPageViaTable(
   // Get the table of games
   const tableMatchList = Array.from(htmlContent.matchAll(TABLE_REGEX));
 
-  if (!(tableMatchList?.length > 1)) {
+  if (!(tableMatchList?.length > 0)) {
     resultsByTeamAndDivision.addError(
       teamId,
       divisionId,
