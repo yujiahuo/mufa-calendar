@@ -1,6 +1,6 @@
 function getCalendarName(teamName) {
   if (!teamName) return "";
-  return `${teamName} - MUFA 2026 summer`;
+  return `${teamName} - ${SEASON_NAME}`;
 }
 
 function getTitle(opponent) {
@@ -21,10 +21,12 @@ function getEndTime(startTime) {
 function getAddressFromParkName(field) {
   if (!(field?.length > 0)) return "";
 
-  const match = field.match(/(.*)\s.$/); // Fields at a park are indicated by a single number or letter
-  if (!match || match.length < 2) return field;
+  //For most seasons, fields at a park are indicated by a single number or letter
+  //const match = field.match(/(.*)\s.$/);
+  //if (!match || match.length < 2) return field;
+  //const cleanName = match[1] ?? field;
 
-  const cleanName = match[1] ?? field;
+  const cleanName = field; // For McGaw
 
   switch (cleanName) {
     case "Glacier":
@@ -39,6 +41,11 @@ function getAddressFromParkName(field) {
       return "North Star Park, 502 North Star Dr, Madison, WI 53718";
     case "Stoner Prairie":
       return "Stoner Prairie Elementary School, 5830 Devoro Rd, Fitchburg, WI 53711";
+    case "McGaw East":
+    case "McGaw North":
+    case "McGaw South":
+    case "McGaw West":
+      return "5236 Lacy Rd, Fitchburg, WI 53711";
     default:
       return cleanName;
   }

@@ -9,9 +9,6 @@ function createAdHocEvent() {
   };
 
   const allCalendars = CalendarApp.getAllCalendars();
-  //   const allCalendars = [
-  //     ...CalendarApp.getCalendarsByName("Disc Don't Lie - MUFA 2026 Summer"),
-  //   ];
 
   allCalendars.forEach((calendar) => {
     try {

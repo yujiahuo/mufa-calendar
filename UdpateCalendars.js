@@ -35,7 +35,7 @@ function updateCalendars(teamsByDivision) {
         resultsByTeamAndDivision.addLog(
           teamId,
           divisionId,
-          "Reached max runtime - creating new trigger"
+          "Reached max runtime - creating new trigger",
         );
         createOneTimeTrigger("continueUpdateCalendars", teamsByDivision, 1);
         break;
@@ -50,7 +50,7 @@ function updateCalendars(teamsByDivision) {
       resultsByTeamAndDivision.addError(
         teamId,
         divisionId,
-        `Hit catch block with error: ${e.message}. Stack: ${e.stack}`
+        `Hit catch block with error: ${e.message}. Stack: ${e.stack}`,
       );
     }
 
@@ -67,12 +67,12 @@ function updateCalendars(teamsByDivision) {
 function updateCalendarEventsForTeam(
   teamId,
   divisionId,
-  resultsByTeamAndDivision
+  resultsByTeamAndDivision,
 ) {
   let [myTeamName, gameEvents] = getEventsFromPageViaTable(
     teamId,
     divisionId,
-    resultsByTeamAndDivision
+    resultsByTeamAndDivision,
   );
 
   if (
@@ -88,7 +88,7 @@ function updateCalendarEventsForTeam(
     teamId,
     divisionId,
     myTeamName,
-    resultsByTeamAndDivision
+    resultsByTeamAndDivision,
   );
 
   if (calendar) {
@@ -104,14 +104,14 @@ function updateCalendarEventsForTeam(
         divisionId,
         calendar,
         eventData,
-        resultsByTeamAndDivision
+        resultsByTeamAndDivision,
       );
     });
   } else {
     resultsByTeamAndDivision.addError(
       teamId,
       divisionId,
-      "Failed to create calendar"
+      "Failed to create calendar",
     );
     return;
   }
@@ -121,9 +121,9 @@ function getCalendarToEdit(
   teamId,
   divisionId,
   teamName,
-  resultsByTeamAndDivision
+  resultsByTeamAndDivision,
 ) {
-  const calendarName = `${teamName} - MUFA 2026 summer`;
+  const calendarName = getCalendarName(teamName);
   let calendar = CalendarApp.getCalendarsByName(calendarName);
   if (calendar?.length > 0) {
     return calendar[0];
@@ -133,7 +133,7 @@ function getCalendarToEdit(
     teamId,
     divisionId,
     calendarName,
-    resultsByTeamAndDivision
+    resultsByTeamAndDivision,
   );
   return calendar;
 }
@@ -144,13 +144,13 @@ function updateEventWithRetry(
   divisionId,
   calendar,
   eventData,
-  resultsByTeamAndDivision
+  resultsByTeamAndDivision,
 ) {
   // Check if event already exists
   let existingEvents = calendar.getEvents(
     eventData.startTime,
     eventData.endTime,
-    { search: "MUFA game" } // Each calendar should have at most one of these
+    { search: "MUFA game" }, // Each calendar should have at most one of these
   );
 
   const maxRetries = 5;
@@ -162,7 +162,7 @@ function updateEventWithRetry(
           divisionId,
           eventData,
           existingEvents,
-          resultsByTeamAndDivision
+          resultsByTeamAndDivision,
         );
       } else {
         createNewEvent(
@@ -170,7 +170,7 @@ function updateEventWithRetry(
           divisionId,
           calendar,
           eventData,
-          resultsByTeamAndDivision
+          resultsByTeamAndDivision,
         );
       }
       return; // Success, exit function
@@ -187,7 +187,7 @@ function updateExistingEvent(
   divisionId,
   newEvent,
   existingEvents,
-  resultsByTeamAndDivision
+  resultsByTeamAndDivision,
 ) {
   if (existingEvents.length === 1) {
     const event = existingEvents[0];
@@ -197,7 +197,7 @@ function updateExistingEvent(
       resultsByTeamAndDivision.addLog(
         teamId,
         divisionId,
-        "Updated existing event title"
+        "Updated existing event title",
       );
       madeChanges = true;
     }
@@ -209,7 +209,7 @@ function updateExistingEvent(
       resultsByTeamAndDivision.addLog(
         teamId,
         divisionId,
-        "Updated existing event time"
+        "Updated existing event time",
       );
       madeChanges = true;
     }
@@ -219,7 +219,7 @@ function updateExistingEvent(
       resultsByTeamAndDivision.addLog(
         teamId,
         divisionId,
-        "Updated existing event location"
+        "Updated existing event location",
       );
       madeChanges = true;
     }
@@ -229,7 +229,7 @@ function updateExistingEvent(
       resultsByTeamAndDivision.addLog(
         teamId,
         divisionId,
-        "Event processed with no changes"
+        "Event processed with no changes",
       );
     }
   }
@@ -240,7 +240,7 @@ function createNewEvent(
   divisionId,
   calendar,
   eventData,
-  resultsByTeamAndDivision
+  resultsByTeamAndDivision,
 ) {
   calendar.createEvent(
     eventData.title,
@@ -249,13 +249,13 @@ function createNewEvent(
     {
       location: eventData.location,
       description: eventData.description,
-    }
+    },
   );
 
   resultsByTeamAndDivision.addLog(
     teamId,
     divisionId,
-    "Created new event for team"
+    "Created new event for team",
   );
 }
 
